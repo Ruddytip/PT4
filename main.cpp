@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ctime>
 
 // Task 1
 // Реализовать функцию перевода чисел из десятичной системы в двоичную, используя рекурсию.
@@ -47,7 +48,39 @@ int power2(const int a, const int b){
 // Реализовать нахождение количества маршрутов шахматного короля с учётом ограничений на перемещение из урока, с препятствиями
 // (где единица - это наличие препятствия, а ноль - свободная для хода клетка)
 // ============================================================== //
-
+const int X = 5;
+const int Y = 5;
+void init_field(int data[X][Y]){
+    srand(time(NULL));
+    for(int j = 0; j < Y; ++j)
+        for(int i = 0; i < X; ++i){
+            data[i][j] = (rand() % 10 >= 7 ? -1 : 0);
+        }
+    data[0][0] = 0;
+}
+void print_field(const int data[X][Y]){
+    for(int j = 0; j < Y; ++j){
+        for(int i = 0; i < X; ++i){
+            if(data[i][j] < 0)
+                std::cout << "x  ";
+            else
+                std::cout << data[i][j] << "  ";
+        }
+        std::cout << std::endl;
+    }
+}
+void check(const int x, const int y, int count, int data[X][Y]){
+    if(data[x][y] == -1) return;
+    if(count >= data[x][y] && count != 0) return;
+    data[x][y] = count;
+    if(x > 0)       check(x - 1, y, count + 1, data);
+    if(y > 0)       check(x, y - 1, count + 1, data);
+    if(x < X - 1)   check(x + 1, y, count + 1, data);
+    if(x < Y  -1)   check(x, y + 1, count + 1, data);
+}
+void find_route(int data[X][Y]){
+    check(0, 0, 0, data);
+}
 // ============================================================== //
 
 int main(){
@@ -60,10 +93,12 @@ int main(){
     // std::cout << power(2, 8);
 
     // Task 2-2
-    std::cout << power2(2, 10);
+    // std::cout << power2(2, 10);
 
     // Task 3
-
-
+    int field[X][Y];
+    init_field(field);
+    find_route(field);
+    print_field(field);
     return 0;
 }
